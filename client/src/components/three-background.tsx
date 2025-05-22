@@ -97,21 +97,21 @@ export default function ThreeBackground() {
       }
     }
     
-    // Create star particles with custom shader material
+    // Create star particles with custom shader material - color based on theme
     const starsMaterial = new THREE.PointsMaterial({
       size: 0.05,
       sizeAttenuation: true,
-      color: 0xffffff,
+      color: theme === 'dark' ? 0xffffff : 0x4a6bff,
       transparent: true,
-      opacity: 0.8,
+      opacity: theme === 'dark' ? 0.8 : 0.6,
       blending: THREE.AdditiveBlending
     });
     
-    // Create line material for connections
+    // Create line material for connections - color based on theme
     const connectionsMaterial = new THREE.LineBasicMaterial({
-      color: 0x8884ff,
+      color: theme === 'dark' ? 0x8884ff : 0x3355dd,
       transparent: true,
-      opacity: 0.2,
+      opacity: theme === 'dark' ? 0.2 : 0.15,
       blending: THREE.AdditiveBlending
     });
     
@@ -156,9 +156,10 @@ export default function ThreeBackground() {
     const animate = () => {
       requestAnimationFrame(animate);
       
-      // Very subtle rotation
-      starField.rotation.x += 0.0002;
-      starField.rotation.y += 0.0001;
+      // Adjust rotation based on theme
+      const rotationSpeed = theme === 'dark' ? 0.0002 : 0.0001;
+      starField.rotation.x += rotationSpeed;
+      starField.rotation.y += rotationSpeed / 2;
       
       // Gentle parallax effect with mouse
       const targetX = mouseX * 0.5;

@@ -131,11 +131,95 @@ export default function ContactSection() {
           </p>
         </motion.div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mx-auto max-w-6xl">
-          {/* Contact Form */}
-          <motion.div 
-            className="custom-card p-8 rounded-xl max-w-md mx-auto lg:mx-0 w-full"
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mx-auto max-w-6xl">
+          {/* Contact Info - Now on the left */}
+          <motion.div
+            className="lg:w-1/3 order-2 lg:order-1"
             initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h3 className="text-2xl font-bold mb-6 font-inter">Contact Information</h3>
+            
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-[hsl(var(--secondary))] rounded-full mr-3 flex-shrink-0">
+                  <i className="fas fa-envelope text-lg"></i>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-1">Email</h4>
+                  <p className="text-foreground">prajeshdutta2004@gmail.com</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-[hsl(var(--secondary))] rounded-full mr-3 flex-shrink-0">
+                  <i className="fas fa-code text-lg"></i>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-1">CodeChef</h4>
+                  <a 
+                    href="https://www.codechef.com/users/prajesh22" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))] transition-colors"
+                  >
+                    codechef.com/users/prajesh22
+                  </a>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-[hsl(var(--secondary))] rounded-full mr-3 flex-shrink-0">
+                  <i className="fas fa-map-marker-alt text-lg"></i>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-1">Location</h4>
+                  <p className="text-foreground">Kolkata, India</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-[hsl(var(--secondary))] rounded-full mr-3 flex-shrink-0">
+                  <i className="fab fa-linkedin text-lg"></i>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-1">LinkedIn</h4>
+                  <a 
+                    href="https://www.linkedin.com/in/prajesh-dutta/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))] transition-colors"
+                  >
+                    linkedin.com/in/prajesh-dutta
+                  </a>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="w-10 h-10 flex items-center justify-center bg-secondary/20 text-[hsl(var(--secondary))] rounded-full mr-3 flex-shrink-0">
+                  <i className="fab fa-github text-lg"></i>
+                </div>
+                <div>
+                  <h4 className="font-bold mb-1">GitHub</h4>
+                  <a 
+                    href="https://github.com/prajesh-dutta" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))] transition-colors"
+                  >
+                    github.com/prajesh-dutta
+                  </a>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Contact Form - Now on the right */}
+          <motion.div 
+            className="custom-card p-8 rounded-xl max-w-md mx-auto lg:mx-0 w-full lg:w-2/3 order-1 lg:order-2"
+            initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
