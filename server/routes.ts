@@ -81,7 +81,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Chatbot API endpoint
+  // Chatbot API endpoint using Perplexity
   app.post('/api/chat', async (req: Request, res: Response) => {
     try {
       const { message } = req.body;
@@ -93,11 +93,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Import the simple chatbot service
-      const { processMessage } = await import('./simple-chatbot-service');
+      // Import the Perplexity-powered chatbot service
+      const { getChatbotResponse } = await import('./chatbot-service');
       
-      // Get response from the rule-based chatbot
-      const response = processMessage(message);
+      // Get response from the Perplexity AI chatbot
+      const response = await getChatbotResponse(message);
       
       res.status(200).json({
         success: true,

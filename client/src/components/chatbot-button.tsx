@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -20,13 +19,46 @@ export default function ChatbotButton() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: "Hi! I'm Prajesh's AI assistant. Ask me anything about him, his skills, education, or interests!",
+      content: "Hi! I'm Prajesh's AI assistant powered by Perplexity. Ask me anything about him, his skills, education, or interests!",
       timestamp: new Date()
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
+  const chatButtonRef = useRef<HTMLButtonElement>(null);
+  
+  // 3D motion values for chat button
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [30, -30]);
+  const rotateY = useTransform(x, [-100, 100], [-30, 30]);
+  
+  // Handle 3D tilt effect
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!chatButtonRef.current) return;
+    
+    const rect = chatButtonRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const mouseX = e.clientX - centerX;
+    const mouseY = e.clientY - centerY;
+    
+    x.set(mouseX);
+    y.set(mouseY);
+  }, [x, y]);
+  
+  const handleMouseLeave = useCallback(() => {
+    x.set(0);
+    y.set(0);
+  }, [x, y]);
+  
+  // Reset position when button is clicked
+  const resetPosition = useCallback(() => {
+    x.set(0);
+    y.set(0);
+  }, [x, y]);
   
   // Scroll to the bottom of the chat on new messages
   useEffect(() => {
@@ -44,9 +76,20 @@ export default function ChatbotButton() {
     }
   }, [showChat]);
   
+  // Fixed position for the chat button to make it stable
+  useEffect(() => {
+    if (chatButtonRef.current) {
+      const button = chatButtonRef.current;
+      button.style.position = 'fixed';
+      button.style.bottom = '20px';
+      button.style.right = '20px';
+    }
+  }, []);
+  
   const handleToggleChat = () => {
     setShowChat(!showChat);
     if (showTooltip) setShowTooltip(false);
+    resetPosition();
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,13 +161,13 @@ export default function ChatbotButton() {
       <AnimatePresence>
         {showTooltip && !showChat && (
           <motion.div
-            className="bg-[hsl(var(--background))] text-foreground p-3 rounded-lg shadow-lg mb-3 max-w-[200px]"
+            className="fixed bottom-24 right-4 bg-[hsl(var(--background))] text-foreground p-3 rounded-lg shadow-lg max-w-[200px] z-[1001]"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2 }}
           >
-            <p className="text-sm">Chat with me!</p>
+            <p className="text-sm font-medium">Chat with Prajesh's AI</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -132,19 +175,22 @@ export default function ChatbotButton() {
       <AnimatePresence>
         {showChat && (
           <motion.div
-            className="fixed bottom-20 right-4 w-[90vw] max-w-[400px] h-[500px] bg-[hsl(var(--background))] rounded-xl border border-[hsl(var(--border))] shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-20 right-4 w-[90vw] max-w-[400px] h-[500px] bg-[hsl(var(--background))] rounded-xl border border-[hsl(var(--border))] shadow-2xl flex flex-col overflow-hidden z-[1000]"
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Chat header */}
-            <div className="bg-[hsl(var(--primary))] p-4 flex justify-between items-center">
+            {/* Chat header with 3D gradient effect */}
+            <div className="bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--secondary))] p-4 flex justify-between items-center">
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-[hsl(var(--secondary))] flex items-center justify-center mr-3">
-                  <i className="fas fa-robot text-white"></i>
+                <div className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center mr-3 border-2 border-white/30 shadow-glow">
+                  <i className="fas fa-robot text-white text-lg"></i>
                 </div>
-                <h3 className="text-white font-bold">Prajesh's AI Assistant</h3>
+                <div>
+                  <h3 className="text-white font-bold">Prajesh's AI Assistant</h3>
+                  <p className="text-white/70 text-xs">Powered by Perplexity</p>
+                </div>
               </div>
               <button 
                 onClick={handleToggleChat}
@@ -155,35 +201,51 @@ export default function ChatbotButton() {
               </button>
             </div>
             
-            {/* Chat messages */}
-            <div className="flex-1 p-4 overflow-y-auto bg-[hsl(var(--muted))/30]">
+            {/* Chat messages with improved styling */}
+            <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-[hsl(var(--muted))/10] to-[hsl(var(--muted))/20]">
               {messages.map((msg, index) => (
-                <div 
-                  key={index} 
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 * (index % 3) }} 
                   className={cn(
-                    "mb-4 max-w-[85%] p-3 rounded-lg",
+                    "mb-4 max-w-[85%] p-3 rounded-lg shadow-sm",
                     msg.role === 'user' 
-                      ? "ml-auto bg-[hsl(var(--primary))] text-white" 
-                      : "bg-[hsl(var(--muted))] text-foreground"
+                      ? "ml-auto bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--primary))/90] text-white" 
+                      : "bg-[hsl(var(--muted))] text-foreground border border-[hsl(var(--border))]"
                   )}
                 >
-                  <p className="text-sm">{msg.content}</p>
-                  <div className="text-xs opacity-70 mt-1 text-right">
-                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <div className="flex items-start">
+                    {msg.role === 'assistant' && (
+                      <span className="mr-2 mt-0.5 text-xs">
+                        <i className="fas fa-robot text-[hsl(var(--secondary))]"></i>
+                      </span>
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm">{msg.content}</p>
+                      <div className="text-xs opacity-70 mt-1 text-right">
+                        {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
               <div ref={messagesEndRef} />
               
-              {/* Loading indicator */}
+              {/* Improved loading indicator */}
               {isLoading && (
                 <div className="flex justify-center items-center mb-4">
-                  <div className="dot-flashing"></div>
+                  <div className="chatbot-loading-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                 </div>
               )}
             </div>
             
-            {/* Chat input */}
+            {/* Chat input with enhanced styling */}
             <form onSubmit={handleSubmit} className="p-4 border-t border-[hsl(var(--border))] bg-[hsl(var(--background))]">
               <div className="flex">
                 <Input
@@ -197,7 +259,7 @@ export default function ChatbotButton() {
                 />
                 <Button 
                   type="submit" 
-                  className="ml-2 bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--primary))]"
+                  className="ml-2 bg-gradient-to-br from-[hsl(var(--secondary))] to-[hsl(var(--primary))] hover:opacity-90 transition-opacity"
                   disabled={isLoading}
                 >
                   <i className="fas fa-paper-plane"></i>
@@ -208,17 +270,39 @@ export default function ChatbotButton() {
         )}
       </AnimatePresence>
       
-      {/* Chat toggle button */}
+      {/* 3D Chat toggle button with perspective effect */}
       <motion.button
-        className="w-14 h-14 bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--primary))] rounded-full flex items-center justify-center shadow-lg shadow-secondary/20 transition-all duration-300"
+        ref={chatButtonRef}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: 'preserve-3d'
+        }}
+        className="chatbot-button w-16 h-16 fixed bottom-6 right-6 z-[1000] bg-gradient-to-br from-[hsl(var(--secondary))] to-[hsl(var(--primary))] rounded-full flex items-center justify-center shadow-glow transition-all duration-300"
         onClick={handleToggleChat}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onMouseEnter={() => !showChat && setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
+        animate={{
+          boxShadow: showChat 
+            ? '0 0 0 rgba(139, 92, 246, 0)' 
+            : ['0 0 20px rgba(139, 92, 246, 0.7)', '0 0 40px rgba(139, 92, 246, 0.3)', '0 0 20px rgba(139, 92, 246, 0.7)']
+        }}
+        transition={{
+          boxShadow: {
+            duration: 2,
+            repeat: Infinity,
+            repeatType: 'reverse'
+          }
+        }}
         aria-label="Chat with AI Assistant"
       >
-        <i className={`fas ${showChat ? 'fa-times' : 'fa-comment-dots'} text-white text-2xl`}></i>
+        <div style={{ transform: 'translateZ(8px)' }} className="relative">
+          <i className={`fas ${showChat ? 'fa-times' : 'fa-comment-dots'} text-white text-2xl`}></i>
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full shadow-glow-sm"></span>
+        </div>
       </motion.button>
     </div>
   );

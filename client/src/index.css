@@ -77,6 +77,62 @@ body {
   z-index: 1000;
 }
 
+/* Chatbot glowing button effect */
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.7);
+}
+
+.shadow-glow-sm {
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.7);
+}
+
+/* Chatbot loading indicator */
+.chatbot-loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.chatbot-loading-indicator span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: hsl(var(--primary));
+  border-radius: 50%;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+
+.chatbot-loading-indicator span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.chatbot-loading-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chatbot-loading-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { 
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 3D button */
+.chatbot-button {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
 .typewriter {
   overflow: hidden;
   white-space: nowrap;
