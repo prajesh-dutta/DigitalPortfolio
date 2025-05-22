@@ -180,11 +180,18 @@ export default function ContactSection() {
               
               <div className="flex items-start">
                 <div className="w-12 h-12 flex items-center justify-center bg-secondary/20 text-[hsl(var(--secondary))] rounded-full mr-4 flex-shrink-0">
-                  <i className="fas fa-phone text-xl"></i>
+                  <i className="fas fa-code text-xl"></i>
                 </div>
                 <div>
-                  <h4 className="font-bold mb-1">Phone</h4>
-                  <p className="text-foreground">+91 8900018808</p>
+                  <h4 className="font-bold mb-1">CodeChef</h4>
+                  <a 
+                    href="https://www.codechef.com/users/prajesh22" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[hsl(var(--secondary))] hover:text-white transition-colors"
+                  >
+                    codechef.com/users/prajesh22
+                  </a>
                 </div>
               </div>
               
@@ -194,7 +201,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="font-bold mb-1">Location</h4>
-                  <p className="text-foreground">Vellore, India</p>
+                  <p className="text-foreground">Kolkata, India</p>
                 </div>
               </div>
               

@@ -6,12 +6,22 @@ import { cn } from '@/lib/utils';
 export default function ProjectsSection() {
   const projects = [
     {
-      title: "Netclicks",
-      description: "A full-stack streaming platform with Google and GitHub OAuth authentication, responsive video player, and containerized deployment.",
-      technologies: "Next.js, React, TypeScript, Tailwind CSS, MongoDB",
-      tags: ["Next.js", "TypeScript", "MongoDB", "Docker"],
+      title: "SecureNet",
+      description: "A comprehensive network security solution with intrusion detection system, firewall configuration, and vulnerability scanning capabilities.",
+      technologies: "Python, Wireshark API, ReactJS, Flask, Docker",
+      tags: ["Cybersecurity", "Python", "Docker", "Network Security"],
       year: "2025",
-      imageUrl: "https://images.unsplash.com/photo-1616469829941-c7200edec809?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450",
+      imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450",
+      githubUrl: "https://github.com/prajesh-dutta",
+      liveUrl: "#"
+    },
+    {
+      title: "CloudGuard",
+      description: "A cloud security platform that monitors AWS and Azure resources, detects misconfigurations, and provides automated remediation suggestions.",
+      technologies: "AWS SDK, Azure SDK, Terraform, ReactJS, Node.js",
+      tags: ["Cloud Security", "AWS", "Azure", "DevOps"],
+      year: "2024",
+      imageUrl: "https://images.unsplash.com/photo-1639322537504-6427a16b0a28?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450",
       githubUrl: "https://github.com/prajesh-dutta",
       liveUrl: "#"
     },
@@ -19,7 +29,7 @@ export default function ProjectsSection() {
       title: "VisageKey",
       description: "AI-powered facial authentication system with 99% recognition accuracy, real-time face detection and secure backend API.",
       technologies: "React.js, Node.js, Express.js, face-api.js",
-      tags: ["React.js", "Node.js", "Express.js", "face-api.js"],
+      tags: ["AI Security", "React.js", "Node.js", "Authentication"],
       year: "2024",
       imageUrl: "https://images.unsplash.com/photo-1579403124614-197f69d8187b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450",
       githubUrl: "https://github.com/prajesh-dutta",
@@ -37,14 +47,14 @@ export default function ProjectsSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold font-inter mb-4">My <span className="gradient-text">Projects</span></h2>
+          <h2 className="text-4xl font-bold font-inter mb-4">Security <span className="gradient-text">Projects</span></h2>
           <div className="w-20 h-1 bg-[hsl(var(--secondary))] mx-auto rounded-full"></div>
           <p className="text-foreground mt-6 max-w-2xl mx-auto">
-            Exploring innovative solutions through code. Here are some of my recent projects.
+            Building robust security solutions to protect digital assets and address real-world cybersecurity challenges.
           </p>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <ProjectCard
               key={index}
@@ -74,8 +84,8 @@ export default function ProjectsSection() {
             rel="noopener noreferrer"
             className="border border-[hsl(var(--secondary))] text-[hsl(var(--secondary))] hover:bg-secondary/10 font-semibold py-3 px-8 rounded-full transition-all duration-300 inline-flex items-center"
           >
-            <span>See More Projects</span>
-            <i className="fas fa-arrow-right ml-2"></i>
+            <span>Explore More Projects</span>
+            <i className="fas fa-shield-alt ml-2"></i>
           </a>
         </motion.div>
       </div>

@@ -29,30 +29,60 @@ export default function ThreeBackground() {
     
     containerRef.current?.appendChild(renderer.domElement);
     
-    // Create particles geometry
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = window.innerWidth < 768 ? 500 : 1000;
+    // Create a grid of particles (cyber grid effect)
+    const gridGeometry = new THREE.BufferGeometry();
+    const gridCount = window.innerWidth < 768 ? 1500 : 3000;
     
-    // Create positions for particles
-    const posArray = new Float32Array(particlesCount * 3);
+    // Create positions for grid particles
+    const posArray = new Float32Array(gridCount * 3);
     
-    for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 10;
+    for (let i = 0; i < gridCount; i++) {
+      // X position (random)
+      posArray[i * 3] = (Math.random() - 0.5) * 10;
+      // Y position (random)
+      posArray[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      // Z position (random)
+      posArray[i * 3 + 2] = (Math.random() - 0.5) * 10;
     }
     
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    gridGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     
-    // Create material with custom color matching the theme
-    const particlesMaterial = new THREE.PointsMaterial({
+    // Digital rain (Matrix-like effect) - vertical particles
+    const digitalRainGeometry = new THREE.BufferGeometry();
+    const rainCount = window.innerWidth < 768 ? 200 : 400;
+    const rainPosArray = new Float32Array(rainCount * 3);
+    
+    for (let i = 0; i < rainCount; i++) {
+      // X position (spread horizontally)
+      rainPosArray[i * 3] = (Math.random() - 0.5) * 15;
+      // Y position (start from top)
+      rainPosArray[i * 3 + 1] = (Math.random() * 10) + 5;
+      // Z position (scattered)
+      rainPosArray[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    }
+    
+    digitalRainGeometry.setAttribute('position', new THREE.BufferAttribute(rainPosArray, 3));
+    
+    // Create materials with custom colors for cybersecurity theme
+    const gridMaterial = new THREE.PointsMaterial({
       size: 0.02,
-      color: 0x8B5CF6, // Secondary color in hex
+      color: 0x0EB6EC, // Cyber blue
+      transparent: true,
+      opacity: 0.6
+    });
+    
+    const rainMaterial = new THREE.PointsMaterial({
+      size: 0.04,
+      color: 0x0EEC88, // Matrix green
       transparent: true,
       opacity: 0.8
     });
     
-    // Create points mesh and add to scene
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particlesMesh);
+    // Create meshes and add to scene
+    const gridMesh = new THREE.Points(gridGeometry, gridMaterial);
+    const rainMesh = new THREE.Points(digitalRainGeometry, rainMaterial);
+    scene.add(gridMesh);
+    scene.add(rainMesh);
     
     // Handle window resize
     const handleResize = () => {
@@ -63,16 +93,42 @@ export default function ThreeBackground() {
     
     window.addEventListener('resize', handleResize);
     
+    // Track mouse position for interactivity
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    const handleMouseMove = (event: MouseEvent) => {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    
     // Animation function
     const animate = () => {
       requestAnimationFrame(animate);
       
-      particlesMesh.rotation.x += 0.0003;
-      particlesMesh.rotation.y += 0.0003;
+      // Regular rotation
+      gridMesh.rotation.x += 0.0002;
+      gridMesh.rotation.y += 0.0003;
       
-      // Interactive movement based on mouse position
-      particlesMesh.rotation.x += 0.0001;
-      particlesMesh.rotation.y += 0.0001;
+      // Mouse-based rotation
+      gridMesh.rotation.x += mouseY * 0.0002;
+      gridMesh.rotation.y += mouseX * 0.0002;
+      
+      // Digital rain animation (matrix effect)
+      const rainPositions = digitalRainGeometry.attributes.position.array as Float32Array;
+      for (let i = 0; i < rainCount; i++) {
+        // Move rain particles down
+        rainPositions[i * 3 + 1] -= 0.03 + Math.random() * 0.02;
+        
+        // Reset particles that have fallen below view
+        if (rainPositions[i * 3 + 1] < -5) {
+          rainPositions[i * 3 + 1] = 5;
+          rainPositions[i * 3] = (Math.random() - 0.5) * 15;
+        }
+      }
+      digitalRainGeometry.attributes.position.needsUpdate = true;
       
       renderer.render(scene, camera);
     };
@@ -83,9 +139,12 @@ export default function ThreeBackground() {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
       containerRef.current?.removeChild(renderer.domElement);
-      particlesGeometry.dispose();
-      particlesMaterial.dispose();
+      gridGeometry.dispose();
+      gridMaterial.dispose();
+      digitalRainGeometry.dispose();
+      rainMaterial.dispose();
     };
   }, []);
   

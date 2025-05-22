@@ -42,11 +42,13 @@ export default function Footer() {
               <i className="fas fa-envelope text-2xl"></i>
             </a>
             <a 
-              href="tel:+918900018808" 
+              href="https://www.codechef.com/users/prajesh22" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-foreground hover:text-[hsl(var(--secondary))] transition-colors duration-300"
-              aria-label="Phone"
+              aria-label="CodeChef Profile"
             >
-              <i className="fas fa-phone text-2xl"></i>
+              <i className="fas fa-code text-2xl"></i>
             </a>
           </div>
         </div>
