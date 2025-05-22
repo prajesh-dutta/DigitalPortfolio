@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import CursorEffects from "@/components/cursor-effects";
+import ChatbotButton from "./components/chatbot-button";
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <CursorEffects />
         <Toaster />
         <Router />
+        <ChatbotButton />
       </TooltipProvider>
     </QueryClientProvider>
   );

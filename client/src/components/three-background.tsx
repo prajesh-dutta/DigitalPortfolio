@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useTheme } from '@/components/theme-provider';
 
 export default function ThreeBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
   
   useEffect(() => {
     if (!containerRef.current) return;
