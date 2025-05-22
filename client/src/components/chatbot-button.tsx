@@ -68,13 +68,21 @@ export default function ChatbotButton() {
     
     try {
       // Call the chatbot API
-      const response = await apiRequest('POST', '/api/chat', { message });
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
       
-      if (response.success) {
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
         // Add assistant response to chat
         const assistantMessage: ChatMessage = {
           role: 'assistant',
-          content: response.response,
+          content: data.response,
           timestamp: new Date()
         };
         

@@ -93,11 +93,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Import the chatbot service
-      const { getChatbotResponse } = await import('./chatbot-service');
+      // Import the simple chatbot service
+      const { processMessage } = await import('./simple-chatbot-service');
       
-      // Get response from the AI chatbot
-      const response = await getChatbotResponse(message);
+      // Get response from the rule-based chatbot
+      const response = processMessage(message);
       
       res.status(200).json({
         success: true,

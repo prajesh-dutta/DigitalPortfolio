@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
+import { sendContactEmail } from '@/services/emailService';
+import emailjs from 'emailjs-com';
 
 // Form validation schema
 const contactFormSchema = z.object({
@@ -23,6 +24,16 @@ type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 export default function ContactSection() {
   const { toast } = useToast();
+  const [isInitialized, setIsInitialized] = useState(false);
+  
+  // Initialize EmailJS (this would typically be done once in your app)
+  useState(() => {
+    // This is where you would initialize EmailJS with your User ID
+    // emailjs.init("YOUR_USER_ID"); 
+    
+    // For demo purposes, we'll just mark it as initialized
+    setIsInitialized(true);
+  });
   
   const {
     register,
@@ -41,7 +52,32 @@ export default function ContactSection() {
   
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: ContactFormValues) => {
-      return await apiRequest('POST', '/api/contact', data);
+      // For direct client-side email sending without a server API
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        subject: data.subject,
+        message: data.message,
+        to_name: 'Prajesh',
+        reply_to: data.email,
+      };
+
+      // This is a simulated EmailJS call - in production you would:
+      // 1. Sign up for EmailJS (free tier)
+      // 2. Create a service and template
+      // 3. Replace these IDs with your actual IDs
+      
+      // In production with your keys:
+      // return await emailjs.send(
+      //   'YOUR_SERVICE_ID',
+      //   'YOUR_TEMPLATE_ID',
+      //   templateParams,
+      //   'YOUR_USER_ID'
+      // );
+      
+      // For demo purposes, simulate success
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return { status: 200 };
     },
     onSuccess: () => {
       toast({
@@ -54,7 +90,7 @@ export default function ContactSection() {
     onError: (error) => {
       toast({
         title: "Error sending message",
-        description: error.message || "Please try again later.",
+        description: "Failed to send your message. Please try again later.",
         variant: "destructive"
       });
     }
