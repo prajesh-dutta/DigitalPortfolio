@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn, scrollToId } from '@/lib/utils';
+import { useTheme } from '@/components/theme-provider';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { theme, setTheme } = useTheme();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -72,14 +74,43 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
+          
+          {/* Theme toggle button */}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-[hsl(var(--muted))] hover:bg-[hsl(var(--muted))]/80 transition-colors"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? (
+              <i className="fas fa-sun text-yellow-300"></i>
+            ) : (
+              <i className="fas fa-moon text-blue-400"></i>
+            )}
+          </button>
         </div>
-        <button 
-          className="md:hidden text-white focus:outline-none"
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
-        </button>
+        <div className="md:hidden flex items-center gap-3">
+          {/* Mobile theme toggle */}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-[hsl(var(--muted))] hover:bg-[hsl(var(--muted))]/80 transition-colors"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? (
+              <i className="fas fa-sun text-yellow-300 text-sm"></i>
+            ) : (
+              <i className="fas fa-moon text-blue-400 text-sm"></i>
+            )}
+          </button>
+          
+          {/* Menu toggle */}
+          <button 
+            className="text-white focus:outline-none"
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
+          </button>
+        </div>
       </div>
       
       {/* Mobile menu */}

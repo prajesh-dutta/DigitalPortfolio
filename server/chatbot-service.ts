@@ -115,9 +115,7 @@ Your main objectives are to:
         temperature: 0.7, // Higher temperature for more creative responses
         max_tokens: 400, // Allow for longer responses
         top_p: 0.9,
-        stream: false,
-        frequency_penalty: 0.8, // Increased to encourage more diverse vocabulary
-        search_recency_filter: "month" // Get recent information
+        stream: false
       })
     });
 

@@ -131,10 +131,10 @@ export default function ContactSection() {
           </p>
         </motion.div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mx-auto max-w-6xl">
           {/* Contact Form */}
           <motion.div 
-            className="custom-card p-8 rounded-xl"
+            className="custom-card p-8 rounded-xl max-w-md mx-auto lg:mx-0 w-full"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
