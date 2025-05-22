@@ -116,9 +116,7 @@ Your main objectives are to:
         max_tokens: 400, // Allow for longer responses
         top_p: 0.9,
         stream: false,
-        presence_penalty: 0.6, // Increased to reduce repetition
         frequency_penalty: 0.8, // Increased to encourage more diverse vocabulary
-        search_domain_filter: ["perplexity.ai"], // Add relevant domains if needed
         search_recency_filter: "month" // Get recent information
       })
     });
