@@ -6,10 +6,15 @@ interface ChatbotResponse {
   model: string;
   object: string;
   created: number;
+  citations?: Array<string>; // Citations from Perplexity
   choices: Array<{
     index: number;
     finish_reason: string;
     message: {
+      role: string;
+      content: string;
+    };
+    delta?: {
       role: string;
       content: string;
     };
@@ -61,7 +66,7 @@ Personal Interests:
 `;
 
 /**
- * Get a response from the AI chatbot using Perplexity API
+ * Get a response from the AI chatbot using Perplexity API with enhanced capabilities
  * @param userMessage - The message from the user
  * @returns The chatbot's response
  */
@@ -73,7 +78,7 @@ export async function getChatbotResponse(userMessage: string): Promise<string> {
       return 'Sorry, the chatbot is currently unavailable. Please try again later.';
     }
 
-    // Create the prompt for the chatbot
+    // Create the prompt for the chatbot with improved system message
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
@@ -81,35 +86,40 @@ export async function getChatbotResponse(userMessage: string): Promise<string> {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "llama-3.1-sonar-small-128k-online",
+        model: "llama-3.1-sonar-small-128k-online", // Using high-quality model
         messages: [
           {
             role: "system",
-            content: `You are Prajesh's AI assistant on his portfolio website. Your role is to answer questions about Prajesh Dutta based on the following information. DO NOT make up information that is not included in this data.
+            content: `You are ProBot, an intelligent AI assistant on Prajesh's portfolio website. 
+            
+You have access to the following information about Prajesh Dutta:
 
 ${personalInfo}
 
-Important guidelines:
-1. Only answer questions about Prajesh and the information provided above.
-2. If asked questions outside of this scope, politely decline and redirect to topics about Prajesh.
-3. Keep answers concise (50-100 words).
-4. Be conversational and friendly.
-5. If you don't have enough information to answer a question, say "I don't have that specific information about Prajesh."
+Your main objectives are to:
+1. Answer ANY type of question in a helpful, accurate, and sophisticated manner.
+2. For questions about Prajesh, use ONLY the information provided above, no need to make up details.
+3. For questions outside of Prajesh's information, provide generally helpful responses based on your broader knowledge.
+4. Keep answers natural, informative and conversational (100-200 words).
+5. Be witty, personable, and engaging - show some personality!
 6. If someone asks for contact details, direct them to use the contact form on the website.
-7. Do not provide any personal identification information beyond what's in the info above.
-8. Avoid political topics or controversial statements.`
+7. For technical questions, provide thoughtful insights based on current industry standards.
+8. Never refuse to answer a reasonable question - always try to be helpful.
+9. If you genuinely don't know something about Prajesh, acknowledge that limitation but still try to provide a helpful response.`
           },
           {
             role: "user",
             content: userMessage
           }
         ],
-        temperature: 0.2,
-        max_tokens: 250,
+        temperature: 0.7, // Higher temperature for more creative responses
+        max_tokens: 400, // Allow for longer responses
         top_p: 0.9,
         stream: false,
-        presence_penalty: 0,
-        frequency_penalty: 1
+        presence_penalty: 0.6, // Increased to reduce repetition
+        frequency_penalty: 0.8, // Increased to encourage more diverse vocabulary
+        search_domain_filter: ["perplexity.ai"], // Add relevant domains if needed
+        search_recency_filter: "month" // Get recent information
       })
     });
 
@@ -121,6 +131,10 @@ Important guidelines:
     }
 
     const data = await response.json() as ChatbotResponse;
+    
+    // Log successful API response for debugging
+    console.log(`Successful Perplexity API response with ${data.usage.completion_tokens} tokens used`);
+    
     return data.choices[0].message.content;
   } catch (error) {
     console.error('Error in chatbot service:', error);

@@ -26,12 +26,14 @@ export default function ContactSection() {
   const { toast } = useToast();
   const [isInitialized, setIsInitialized] = useState(false);
   
-  // Initialize EmailJS (this would typically be done once in your app)
+  // Initialize EmailJS with the User ID from environment variables
   useState(() => {
-    // This is where you would initialize EmailJS with your User ID
-    // emailjs.init("YOUR_USER_ID"); 
+    // We're using environment variables for the EmailJS User ID
+    const emailjsUserId = import.meta.env.EMAILJS_USER_ID;
+    if (emailjsUserId) {
+      emailjs.init(emailjsUserId);
+    }
     
-    // For demo purposes, we'll just mark it as initialized
     setIsInitialized(true);
   });
   
@@ -62,22 +64,26 @@ export default function ContactSection() {
         reply_to: data.email,
       };
 
-      // This is a simulated EmailJS call - in production you would:
-      // 1. Sign up for EmailJS (free tier)
-      // 2. Create a service and template
-      // 3. Replace these IDs with your actual IDs
+      // Get environment variables
+      const serviceId = import.meta.env.EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.EMAILJS_TEMPLATE_ID;
+      const userId = import.meta.env.EMAILJS_USER_ID;
       
-      // In production with your keys:
-      // return await emailjs.send(
-      //   'YOUR_SERVICE_ID',
-      //   'YOUR_TEMPLATE_ID',
-      //   templateParams,
-      //   'YOUR_USER_ID'
-      // );
+      if (!serviceId || !templateId || !userId) {
+        console.error('EmailJS configuration is incomplete');
+        throw new Error('Email service configuration is missing');
+      }
       
-      // For demo purposes, simulate success
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return { status: 200 };
+      // Send email using EmailJS with environment variables
+      const response = await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        userId
+      );
+      
+      console.log('Email sent successfully:', response);
+      return response;
     },
     onSuccess: () => {
       toast({

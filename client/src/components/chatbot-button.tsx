@@ -19,7 +19,7 @@ export default function ChatbotButton() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: "Hi! I'm Prajesh's AI assistant powered by Perplexity. Ask me anything about him, his skills, education, or interests!",
+      content: "Hi! I'm ProBot - your intelligent assistant. Ask me anything about Prajesh, his skills, education, or interests!",
       timestamp: new Date()
     }
   ]);
@@ -188,8 +188,8 @@ export default function ChatbotButton() {
                   <i className="fas fa-robot text-white text-lg"></i>
                 </div>
                 <div>
-                  <h3 className="text-white font-bold">Prajesh's AI Assistant</h3>
-                  <p className="text-white/70 text-xs">Powered by Perplexity</p>
+                  <h3 className="text-white font-bold">ProBot</h3>
+                  <p className="text-white/70 text-xs">AI-Powered Assistant</p>
                 </div>
               </div>
               <button 

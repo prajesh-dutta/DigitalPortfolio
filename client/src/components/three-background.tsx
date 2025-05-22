@@ -7,82 +7,126 @@ export default function ThreeBackground() {
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Scene setup
+    // Scene setup with sophisticated, subtle theme
     const scene = new THREE.Scene();
     
     // Camera setup with responsive aspect ratio
     const camera = new THREE.PerspectiveCamera(
-      75,
+      60,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 3;
+    camera.position.z = 5;
     
-    // Initialize renderer
+    // Initialize renderer with improved settings
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
-      alpha: true 
+      alpha: true,
+      powerPreference: 'high-performance'
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
     containerRef.current?.appendChild(renderer.domElement);
     
-    // Create a grid of particles (cyber grid effect)
-    const gridGeometry = new THREE.BufferGeometry();
-    const gridCount = window.innerWidth < 768 ? 1500 : 3000;
+    // Create a constellation of stars (elegant particle effect)
+    const starsGeometry = new THREE.BufferGeometry();
+    const starsCount = window.innerWidth < 768 ? 800 : 1500;
     
-    // Create positions for grid particles
-    const posArray = new Float32Array(gridCount * 3);
+    // Create positions for constellation points
+    const posArray = new Float32Array(starsCount * 3);
+    const scaleArray = new Float32Array(starsCount);
     
-    for (let i = 0; i < gridCount; i++) {
-      // X position (random)
-      posArray[i * 3] = (Math.random() - 0.5) * 10;
-      // Y position (random)
-      posArray[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      // Z position (random)
-      posArray[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    // Create a more organized, elegant distribution
+    for (let i = 0; i < starsCount; i++) {
+      // Use golden ratio distribution for more natural look
+      const theta = i * Math.PI * (3 - Math.sqrt(5)); // Golden angle
+      const y = 1 - (i / (starsCount - 1)) * 2; // y goes from 1 to -1
+      const radius = Math.sqrt(1 - y * y); // Distribute on a sphere
+      
+      // Distribute points on a sphere for elegant feel
+      posArray[i * 3] = Math.cos(theta) * radius * 7; // X position 
+      posArray[i * 3 + 1] = y * 7; // Y position
+      posArray[i * 3 + 2] = Math.sin(theta) * radius * 7; // Z position
+      
+      // Vary the size of each star
+      scaleArray[i] = Math.random() * 1.5 + 0.5;
     }
     
-    gridGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    starsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    starsGeometry.setAttribute('scale', new THREE.BufferAttribute(scaleArray, 1));
     
-    // Digital rain (Matrix-like effect) - vertical particles
-    const digitalRainGeometry = new THREE.BufferGeometry();
-    const rainCount = window.innerWidth < 768 ? 200 : 400;
-    const rainPosArray = new Float32Array(rainCount * 3);
+    // Create gentle connections between nearby particles
+    const connectionsGeometry = new THREE.BufferGeometry();
+    const connectionsCount = starsCount * 2;
+    const connectionsVertices = [];
+    const connectionsColors = [];
     
-    for (let i = 0; i < rainCount; i++) {
-      // X position (spread horizontally)
-      rainPosArray[i * 3] = (Math.random() - 0.5) * 15;
-      // Y position (start from top)
-      rainPosArray[i * 3 + 1] = (Math.random() * 10) + 5;
-      // Z position (scattered)
-      rainPosArray[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    // Find nearby points to create connections
+    for (let i = 0; i < starsCount; i++) {
+      const x1 = posArray[i * 3];
+      const y1 = posArray[i * 3 + 1];
+      const z1 = posArray[i * 3 + 2];
+      
+      // For each point, connect to the 2 nearest neighbors
+      for (let j = i + 1; j < starsCount; j++) {
+        const x2 = posArray[j * 3];
+        const y2 = posArray[j * 3 + 1];
+        const z2 = posArray[j * 3 + 2];
+        
+        // Calculate distance
+        const dist = Math.sqrt((x2-x1)**2 + (y2-y1)**2 + (z2-z1)**2);
+        
+        // Only connect if distance is within threshold
+        if (dist < 2) {
+          connectionsVertices.push(x1, y1, z1);
+          connectionsVertices.push(x2, y2, z2);
+          
+          // Create gradient color for sophisticated look
+          const alpha = 1.0 - (dist / 2);
+          const color = new THREE.Color();
+          // Subtle purplish blue gradient
+          color.setHSL(0.7, 0.8, 0.6);
+          
+          connectionsColors.push(color.r, color.g, color.b, 0.5);
+          connectionsColors.push(color.r, color.g, color.b, 0.5);
+        }
+      }
     }
     
-    digitalRainGeometry.setAttribute('position', new THREE.BufferAttribute(rainPosArray, 3));
-    
-    // Create materials with custom colors for cybersecurity theme
-    const gridMaterial = new THREE.PointsMaterial({
-      size: 0.02,
-      color: 0x0EB6EC, // Cyber blue
+    // Create star particles with custom shader material
+    const starsMaterial = new THREE.PointsMaterial({
+      size: 0.05,
+      sizeAttenuation: true,
+      color: 0xffffff,
       transparent: true,
-      opacity: 0.6
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending
     });
     
-    const rainMaterial = new THREE.PointsMaterial({
-      size: 0.04,
-      color: 0x0EEC88, // Matrix green
+    // Create line material for connections
+    const connectionsMaterial = new THREE.LineBasicMaterial({
+      color: 0x8884ff,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.2,
+      blending: THREE.AdditiveBlending
     });
     
-    // Create meshes and add to scene
-    const gridMesh = new THREE.Points(gridGeometry, gridMaterial);
-    const rainMesh = new THREE.Points(digitalRainGeometry, rainMaterial);
-    scene.add(gridMesh);
-    scene.add(rainMesh);
+    // Create star field and connections
+    const starField = new THREE.Points(starsGeometry, starsMaterial);
+    scene.add(starField);
+    
+    // Add connections if there are some (at least 2 vertices)
+    if (connectionsVertices.length > 0) {
+      const connectionsPositions = new Float32Array(connectionsVertices);
+      connectionsGeometry.setAttribute('position', new THREE.BufferAttribute(connectionsPositions, 3));
+      const connections = new THREE.LineSegments(connectionsGeometry, connectionsMaterial);
+      scene.add(connections);
+    }
+    
+    // Add subtle fog for depth
+    scene.fog = new THREE.FogExp2(0x000a15, 0.05);
     
     // Handle window resize
     const handleResize = () => {
@@ -93,43 +137,49 @@ export default function ThreeBackground() {
     
     window.addEventListener('resize', handleResize);
     
-    // Track mouse position for interactivity
+    // Track mouse position for subtle parallax effect
     let mouseX = 0;
     let mouseY = 0;
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
     
     const handleMouseMove = (event: MouseEvent) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+      mouseX = (event.clientX - windowHalfX) * 0.0005;
+      mouseY = (event.clientY - windowHalfY) * 0.0005;
     };
     
     window.addEventListener('mousemove', handleMouseMove);
     
-    // Animation function
+    // Animation function with sophisticated movement
     const animate = () => {
       requestAnimationFrame(animate);
       
-      // Regular rotation
-      gridMesh.rotation.x += 0.0002;
-      gridMesh.rotation.y += 0.0003;
+      // Very subtle rotation
+      starField.rotation.x += 0.0002;
+      starField.rotation.y += 0.0001;
       
-      // Mouse-based rotation
-      gridMesh.rotation.x += mouseY * 0.0002;
-      gridMesh.rotation.y += mouseX * 0.0002;
+      // Gentle parallax effect with mouse
+      const targetX = mouseX * 0.5;
+      const targetY = mouseY * 0.5;
       
-      // Digital rain animation (matrix effect)
-      const rainPositions = digitalRainGeometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < rainCount; i++) {
-        // Move rain particles down
-        rainPositions[i * 3 + 1] -= 0.03 + Math.random() * 0.02;
-        
-        // Reset particles that have fallen below view
-        if (rainPositions[i * 3 + 1] < -5) {
-          rainPositions[i * 3 + 1] = 5;
-          rainPositions[i * 3] = (Math.random() - 0.5) * 15;
-        }
+      // Smooth transitions
+      camera.position.x += (targetX - camera.position.x) * 0.05;
+      camera.position.y += (-targetY - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+      
+      // Pulsing effect for stars
+      const time = Date.now() * 0.001;
+      const scales = starsGeometry.attributes.scale.array as Float32Array;
+      
+      for (let i = 0; i < starsCount; i++) {
+        // Create subtle pulsing at different rates
+        const pulseFactor = Math.sin(time + i * 0.1) * 0.1 + 0.9;
+        starsMaterial.size = 0.05 * pulseFactor;
       }
-      digitalRainGeometry.attributes.position.needsUpdate = true;
       
+      starsGeometry.attributes.scale.needsUpdate = true;
+      
+      // Render the scene
       renderer.render(scene, camera);
     };
     
@@ -141,10 +191,12 @@ export default function ThreeBackground() {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
       containerRef.current?.removeChild(renderer.domElement);
-      gridGeometry.dispose();
-      gridMaterial.dispose();
-      digitalRainGeometry.dispose();
-      rainMaterial.dispose();
+      starsGeometry.dispose();
+      starsMaterial.dispose();
+      if (connectionsVertices.length > 0) {
+        connectionsGeometry.dispose();
+        connectionsMaterial.dispose();
+      }
     };
   }, []);
   
