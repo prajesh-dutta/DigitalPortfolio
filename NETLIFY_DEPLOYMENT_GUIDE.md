@@ -24,9 +24,9 @@ This guide provides step-by-step instructions for deploying the Digital Portfoli
    - Select your repository
 
 4. **Configure Build Settings**
-   - Base directory: `client`
-   - Build command: `npm run build`
-   - Publish directory: `dist`
+   - Base directory: `client` (the directory containing your frontend code)
+   - Build command: `npm run build` (command to build your Vite React app)
+   - Publish directory: `dist` (where your built site will be generated)
 
 5. **Advanced Build Settings**
    - Click "Show advanced" 
@@ -64,6 +64,23 @@ This guide provides step-by-step instructions for deploying the Digital Portfoli
 1. After deployment, Netlify will provide a URL for your site
 2. Visit the URL and test the contact form functionality
 3. Check that API requests are correctly proxied to your Render backend
+
+## Understanding Netlify Configuration Settings
+
+### Base Directory (`client`)
+This is where Netlify will install dependencies and run your build command. Since your React application is inside the `client` folder, you need to set this to `client` when deploying from the root of your repository.
+
+### Package Directory
+For monorepo setups where the package.json is in a different location than the base directory. In your case, this should be left empty since your package.json is directly inside the client directory.
+
+### Build Command (`npm run build`)
+The command Netlify will execute to build your site. This runs the build script defined in your package.json which uses Vite to compile your React application.
+
+### Publish Directory (`dist`)
+The directory where your built application will be generated. For Vite projects, this is typically `dist`. This is the directory that will be deployed to Netlify's CDN.
+
+### Functions Directory
+This would be used if you were implementing Netlify Functions (serverless functions). Since you're using a separate backend on Render, you don't need to specify this.
 
 ## Troubleshooting
 
