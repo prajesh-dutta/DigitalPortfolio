@@ -8,5 +8,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    proxy: {
+      '/api': {
+        target: 'https://digitalportfolio-yqde.onrender.com',
+        changeOrigin: true,
+        secure: true,
+      }
+    }
   },
 });

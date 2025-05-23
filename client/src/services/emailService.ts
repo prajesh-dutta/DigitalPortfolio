@@ -6,9 +6,9 @@ export const sendContactEmail = async (formData: {
   message: string;
 }) => {
   try {
-    console.log('Sending contact form data to Render API:', formData);
+    console.log('Sending contact form data to API:', formData);
     
-    const response = await fetch('https://digitalportfolio-yqde.onrender.com/api/contact', {
+    const response = await fetch('/api/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
