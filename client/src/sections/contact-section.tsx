@@ -39,7 +39,7 @@ export default function ContactSection() {
     }
   });
   
-  const { mutate, isPending } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: async (data: ContactFormValues) => {
       // Send the contact form data to our server API
       const response = await sendContactEmail(data);
@@ -243,10 +243,10 @@ export default function ContactSection() {
               
               <Button 
                 type="submit" 
-                disabled={isPending}
+                disabled={isLoading}
                 className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg shadow-purple-500/20 flex items-center justify-center"
               >
-                <span>{isPending ? "Sending..." : "Send Message"}</span>
+                <span>{isLoading ? "Sending..." : "Send Message"}</span>
                 <i className="fas fa-paper-plane ml-2"></i>
               </Button>
             </form>
