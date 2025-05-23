@@ -1,6 +1,4 @@
-import emailjs from 'emailjs-com';
-
-// Free email service using EmailJS
+// Send contact form data to the server API
 export const sendContactEmail = async (formData: {
   name: string;
   email: string;
@@ -8,34 +6,39 @@ export const sendContactEmail = async (formData: {
   message: string;
 }) => {
   try {
-    // EmailJS requires setting up a free account and creating a template
-    // For this example, we'll use default service and template IDs which need to be configured
-    // You'll need to sign up at emailjs.com and replace these with your own
-    const templateParams = {
-      from_name: formData.name,
-      from_email: formData.email,
-      subject: formData.subject,
-      message: formData.message,
-      to_name: 'Prajesh',
-      reply_to: formData.email,
-    };
-
-    // You need to replace these with your actual EmailJS service ID, template ID, and user ID
-    // These can be found in your EmailJS dashboard after signing up
-    const serviceId = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
-    const templateId = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
-    const userId = 'YOUR_USER_ID'; // Replace with your EmailJS user ID
+    console.log('Sending contact form data to server API:', formData);
     
-    const response = await emailjs.send(
-      serviceId,
-      templateId,
-      templateParams,
-      userId
-    );
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
     
-    return { success: true, message: 'Email sent successfully!' };
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      console.error('Failed to parse response JSON:', e);
+      return { 
+        success: false, 
+        message: 'Failed to send email. Server returned an invalid response.' 
+      };
+    }
+    
+    if (response.ok) {
+      console.log('Server API response (success):', data);
+      return { success: true, message: data.message || 'Email sent successfully!' };
+    } else {
+      console.error('Server API response (error):', data);
+      return { 
+        success: false, 
+        message: data.message || 'Failed to send email. Please try again later.' 
+      };
+    }
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending contact form data to server API:', error);
     return { success: false, message: 'Failed to send email. Please try again later.' };
   }
 };

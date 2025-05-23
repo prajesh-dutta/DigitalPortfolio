@@ -10,7 +10,7 @@ export default function CertificatesSection() {
       level: "Associate Level",
       icon: "fab fa-aws",
       iconColor: "bg-blue-500/20 text-blue-400",
-      url: "https://aws.amazon.com/certification/certified-solutions-architect-associate/"
+      url: "https://www.credly.com/badges/a7cf8bd0-a9a7-49c3-a9f8-d3af4eb9ac2c/linked_in_profile"
     },
     {
       title: "Azure Developer Associate",
@@ -18,7 +18,7 @@ export default function CertificatesSection() {
       level: "Associate Level",
       icon: "fab fa-microsoft",
       iconColor: "bg-blue-600/20 text-blue-500",
-      url: "https://learn.microsoft.com/en-us/credentials/certifications/azure-developer/"
+      url: "https://learn.microsoft.com/api/credentials/share/en-in/prajesh-dutta/F926228E7E23320?sharingId"
     },
     {
       title: "MongoDB Certified Associate Developer",
@@ -26,7 +26,7 @@ export default function CertificatesSection() {
       level: "Associate Level",
       icon: "fas fa-database",
       iconColor: "bg-green-500/20 text-green-400",
-      url: "https://university.mongodb.com/certification"
+      url: "https://learn.mongodb.com/c/aD-Y0mzxQj68du02jq3SHQ"
     },
     {
       title: "Azure AI Fundamentals",
@@ -34,15 +34,15 @@ export default function CertificatesSection() {
       level: "Fundamental Level",
       icon: "fas fa-brain",
       iconColor: "bg-blue-600/20 text-blue-500",
-      url: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/"
+      url: "https://www.credly.com/go/KVccTtc7kt8OtipFJ4X6lg"
     },
     {
-      title: "Oracle Cloud Infrastructure Foundations",
+      title: "Oracle Fusion Cloud Applications HCM",
       issuer: "Oracle",
-      level: "Fundamental Level",
+      level: "Associate Level",
       icon: "fas fa-cloud",
       iconColor: "bg-red-500/20 text-red-400",
-      url: "https://education.oracle.com/oracle-cloud-infrastructure-foundations-associate/pexam_1Z0-1085-22"
+      url: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=BCBB4CC19DEF5B6BEBFC9E70978F08D4991372FF7568D4FB9E933DFDEC9BE6B6"
     },
     {
       title: "GitHub Foundations",
@@ -50,7 +50,7 @@ export default function CertificatesSection() {
       level: "Fundamental Level",
       icon: "fab fa-github",
       iconColor: "bg-purple-500/20 text-purple-400",
-      url: "https://resources.github.com/learn/certifications/"
+      url: "https://www.credly.com/badges/0aad8a80-0cc4-4d5f-ba71-c6168a362f4c/linked_in_profile"
     },
     {
       title: "Network Defense Essentials",
@@ -58,7 +58,7 @@ export default function CertificatesSection() {
       level: "Essential Level",
       icon: "fas fa-shield-alt",
       iconColor: "bg-red-500/20 text-red-400",
-      url: "https://www.eccouncil.org/train-certify/network-defense-essentials-nde/"
+      url: "https://codered.eccouncil.org/certificate/ad06607e-2988-4968-a7ff-eec19a830893"
     },
     {
       title: "Ethical Hacking Essentials",
@@ -66,18 +66,18 @@ export default function CertificatesSection() {
       level: "Essential Level",
       icon: "fas fa-user-secret",
       iconColor: "bg-yellow-500/20 text-yellow-400",
-      url: "https://www.eccouncil.org/train-certify/ethical-hacking-essentials-ehe/"
+      url: "https://codered.eccouncil.org/certificate/bc273a5b-2dc5-402e-a876-900d0c9f19fb"
     }
   ];
   
   const additionalCertificates = [
     {
       name: "The Bits and Bytes of Computer Networking",
-      url: "https://www.coursera.org/learn/computer-networking"
+      url: "https://coursera.org/verify/2GJC67R2VFSX"
     },
     {
       name: "NDG Linux Unhatched",
-      url: "https://www.netacad.com/courses/os-it/ndg-linux-unhatched"
+      url: "https://drive.proton.me/urls/J84V094QV0#hVAMIiCEDK46"
     }
   ];
   

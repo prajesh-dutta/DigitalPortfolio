@@ -19,7 +19,7 @@ export default function ChatbotButton() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: "Hi! I'm ProBot - your intelligent assistant. Ask me anything about Prajesh, his skills, education, or interests!",
+      content: "Hi! I'm ProBot - Prajesh's AI assistant. Ask me anything about his skills, education, or interests. I'll keep it brief!",
       timestamp: new Date()
     }
   ]);
@@ -111,6 +111,7 @@ export default function ChatbotButton() {
     
     try {
       // Call the chatbot API
+      console.log('Sending message to chatbot:', message);
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -120,6 +121,7 @@ export default function ChatbotButton() {
       });
       
       const data = await response.json();
+      console.log('Received response from chatbot API:', data);
       
       if (response.ok && data.success) {
         // Add assistant response to chat

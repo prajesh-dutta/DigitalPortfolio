@@ -36,6 +36,11 @@ export function ThemeProvider({
     root.classList.remove("light", "dark");
     root.classList.add(theme);
     localStorage.setItem(storageKey, theme);
+    
+    // Force a repaint to ensure theme styles are applied
+    document.body.style.display = 'none';
+    document.body.offsetHeight; // Trigger reflow
+    document.body.style.display = '';
   }, [theme, storageKey]);
 
   const value = {

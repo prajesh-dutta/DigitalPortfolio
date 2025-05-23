@@ -15,6 +15,14 @@ const contactSchema = z.object({
 export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission endpoint
   app.post('/api/contact', async (req: Request, res: Response) => {
+    // Debug: log EmailJS env vars
+    console.log('EmailJS ENV in route:', {
+      SERVICE_ID: process.env.EMAILJS_SERVICE_ID,
+      TEMPLATE_ID: process.env.EMAILJS_TEMPLATE_ID,
+      USER_ID: process.env.EMAILJS_USER_ID
+    });
+    console.log('Received contact form submission:', req.body);
+    
     try {
       // Validate the request body
       const validatedData = contactSchema.parse(req.body);
@@ -39,18 +47,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         Message: ${validatedData.message}
       `;
       
-      // Send email notification using SendGrid
+      // Send email notification using EmailJS
+      console.log('Sending contact form email notification...');
       const emailSent = await sendEmail({
-        to: "zeneathben@gmail.com", // Your notification email
-        from: "portfolio@prajeshdutta.com", // This must be a verified sender in SendGrid
+        to: "prajeshdutta2004@gmail.com", // Your notification email
+        from: "Portfolio Contact Form <no-reply@prajeshdutta.com>", 
         subject: `[Portfolio Contact] ${validatedData.subject}`,
         text: emailText,
         html: emailHtml
       });
       
-      // If we had persistent storage, we would store it like:
-      // await storage.saveContactMessage(validatedData);
+      console.log('Email sending result:', emailSent ? 'Success' : 'Failed');
       
+      // Return response based on email sending status
       if (emailSent) {
         // Return success
         res.status(200).json({ 
@@ -59,6 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       } else {
         // Handle email sending failure
+        console.error('Email sending failed!');
         res.status(500).json({ 
           success: false, 
           message: "Failed to send message. Please try again later." 

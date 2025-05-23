@@ -78,6 +78,8 @@ export async function getChatbotResponse(userMessage: string): Promise<string> {
       return 'Sorry, the chatbot is currently unavailable. Please try again later.';
     }
 
+    console.log('Using Perplexity API Key:', process.env.PERPLEXITY_API_KEY.substring(0, 10) + '...');
+    
     // Create the prompt for the chatbot with improved system message
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -90,31 +92,32 @@ export async function getChatbotResponse(userMessage: string): Promise<string> {
         messages: [
           {
             role: "system",
-            content: `You are ProBot, an intelligent AI assistant on Prajesh's portfolio website. 
+            content: `You are ProBot, a concise AI assistant on Prajesh's portfolio website. 
             
 You have access to the following information about Prajesh Dutta:
 
 ${personalInfo}
 
 Your main objectives are to:
-1. Answer ANY type of question in a helpful, accurate, and sophisticated manner.
+1. Provide brief, focused answers (30-50 words maximum).
 2. For questions about Prajesh, use ONLY the information provided above, no need to make up details.
-3. For questions outside of Prajesh's information, provide generally helpful responses based on your broader knowledge.
-4. Keep answers natural, informative and conversational (100-200 words).
-5. Be witty, personable, and engaging - show some personality!
-6. If someone asks for contact details, direct them to use the contact form on the website.
-7. For technical questions, provide thoughtful insights based on current industry standards.
-8. Never refuse to answer a reasonable question - always try to be helpful.
-9. If you genuinely don't know something about Prajesh, acknowledge that limitation but still try to provide a helpful response.`
+3. Keep answers direct and to the point without unnecessary elaboration.
+4. Be friendly but extremely concise.
+5. If someone asks for contact details, direct them to use the contact form on the website.
+6. For technical questions, provide concise, accurate insights.
+7. Never refuse to answer a reasonable question.
+8. If you don't know something about Prajesh, acknowledge that limitation briefly.
+9. Don't include citations or references in your responses.
+10. Never use phrases like "I'm happy to help" or "Let me know if you need anything else" to keep responses brief.`
           },
           {
             role: "user",
             content: userMessage
           }
         ],
-        temperature: 0.7, // Higher temperature for more creative responses
-        max_tokens: 400, // Allow for longer responses
-        top_p: 0.9,
+        temperature: 0.5, // Lower temperature for more focused and predictable responses
+        max_tokens: 100, // Reduced token limit to enforce brevity
+        top_p: 0.7,
         stream: false
       })
     });
